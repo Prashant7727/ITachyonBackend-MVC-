@@ -89,11 +89,14 @@ const getCurrentUserData = async (req, res, next) => {
     }
   };
 
+ 
+
 
   module.exports ={
     // authenticateToken,
     loginUser,
     refreshAccessToken,
     getData,
-    getCurrentUserData
+    getCurrentUserData,
+    // createDeal
   }
