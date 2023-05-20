@@ -17,6 +17,8 @@ router.put('/tasks/:taskId/renew',authToken.authenticateToken,handleAllUsers.ren
 router.put('/tasks/:taskId/result',authToken.authenticateToken,handleAllUsers.addResultFromComment);
 router.put('/tasks/:taskId/startTask',authToken.authenticateToken,handleAllUsers.startTask);
 router.put('/tasks/:taskId/updateTask',authToken.authenticateToken,handleAllUsers.updateTask);
+// router.get('/crm/deal/add',authToken.authenticateToken,handleAllUsers.createDeal);
+
 
 
 module.exports=router;
