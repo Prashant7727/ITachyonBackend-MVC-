@@ -10,7 +10,7 @@ const taskSchema = new mongoose.Schema({
   project: { type: Number, default: 0 },
   stage: { type: Number, default: 0 },
   createdBy: { type: mongoose.Schema.Types.ObjectId, ref: 'UserLogin' },
-  dateCreated: { type: Date },
+ 
   responsible: [{ type: mongoose.Schema.Types.ObjectId, ref: 'UserLogin' }],
   participant: [{ type: mongoose.Schema.Types.ObjectId, ref: 'UserLogin' }],
   observers: [{ type: mongoose.Schema.Types.ObjectId, ref: 'UserLogin' }],
@@ -50,7 +50,11 @@ const taskSchema = new mongoose.Schema({
   pinned: { type: String, enum: ['Y', 'N'], default: 'N' },
   pinnedInGroup: { type: String, enum: ['Y', 'N'], default: 'N' },
   results: { type: [String], default: [] } // Add the results field
-});
+},
+{
+  timestamps: true
+}
+);
 
 const Task = mongoose.model('Task', taskSchema);
 

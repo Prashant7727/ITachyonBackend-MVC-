@@ -2,61 +2,99 @@ const Task = require("../models/TaskModel");
 const axios = require("axios");
 //add task.....................................................
 
-// const addTask = async (req, res) => {
-//     try {
-//       const task = new Task(req.body);
-//       const savedTask = await task.save();
-//       res.status(201).json(savedTask);
-//     } catch (error) {
-//       res.status(500).json({ error: "Failed to create the task" });
-//     }
-//   };
-
 const addTask = async (req, res) => {
   try {
-    const task = new Task(req.body);
+    const loggedInUserId = req.user.userId; // Assuming the user ID is available in the request after authentication
+    const taskData = req.body;
+    taskData.createdBy = loggedInUserId; // Set the createdBy field with the user ID
+
+    const task = new Task(taskData);
     const savedTask = await task.save();
+    // if (res.statusCode == 200) {
+    //   const url =
+    //     "https://me.itachyon.com/rest/27/xp77o5948rzldiuh/crm.deal.add.json";
 
-    if (res.statusCode == 200) {
-      const url =
-        "https://me.itachyon.com/rest/27/xp77o5948rzldiuh/crm.deal.add.json";
+    //   const data = {
+    //     fields: {
+    //       TITLE: "title",
+    //       UF_CRM_1683697473619: "creatorName",
+    //       UF_CRM_632EC9E45AFBD: "description",
+    //       UF_CRM_1683702408727: "creatorEmail",
+    //       UF_CRM_1675089346322: "creatorClinicCode",
+    //       UF_CRM_1675875292996: "creatorClinicName",
+    //       "bxu_files[]": "",
+    //     },
+    //   };
 
-      const data = {
-        fields: {
-          TITLE: "title",
-          UF_CRM_1683697473619: "creatorName",
-          UF_CRM_632EC9E45AFBD: "description",
-          UF_CRM_1683702408727: "creatorEmail",
-          UF_CRM_1675089346322: "creatorClinicCode",
-          UF_CRM_1675875292996: "creatorClinicName",
-          "bxu_files[]": "",
-        },
-      };
-
-      axios
-        .post(url, data, {
-          headers: {
-            "Content-Type": "application/json",
-          },
-        })
-        .then((response) => {
-          if (response.status === 200) {
-            console.log("Ticket created in Bitrix DB", response.status);
-            return true;
-          } else {
-            console.log("Ticket not created", response.status);
-          }
-        })
-        .catch((error) => {
-          console.error("Error from DB:", error);
-        });
-    }
-
+    //   axios
+    //     .post(url, data, {
+    //       headers: {
+    //         "Content-Type": "application/json",
+    //       },
+    //     })
+    //     .then((response) => {
+    //       if (response.status === 200) {
+    //         console.log("Ticket created in Bitrix DB", response.status);
+    //         return true;
+    //       } else {
+    //         console.log("Ticket not created", response.status);
+    //       }
+    //     })
+    //     .catch((error) => {
+    //       console.error("Error from DB:", error);
+    //     });
+    // }
     res.status(201).json(savedTask);
   } catch (error) {
     res.status(500).json({ error: "Failed to create the task" });
   }
 };
+
+// const addTask = async (req, res) => {
+//   try {
+//     const task = new Task(req.body);
+//     const savedTask = await task.save();
+
+//     // if (res.statusCode == 200) {
+//     //   const url =
+//     //     "https://me.itachyon.com/rest/27/xp77o5948rzldiuh/crm.deal.add.json";
+
+//     //   const data = {
+//     //     fields: {
+//     //       TITLE: "title",
+//     //       UF_CRM_1683697473619: "creatorName",
+//     //       UF_CRM_632EC9E45AFBD: "description",
+//     //       UF_CRM_1683702408727: "creatorEmail",
+//     //       UF_CRM_1675089346322: "creatorClinicCode",
+//     //       UF_CRM_1675875292996: "creatorClinicName",
+//     //       "bxu_files[]": "",
+//     //     },
+//     //   };
+
+//     //   axios
+//     //     .post(url, data, {
+//     //       headers: {
+//     //         "Content-Type": "application/json",
+//     //       },
+//     //     })
+//     //     .then((response) => {
+//     //       if (response.status === 200) {
+//     //         console.log("Ticket created in Bitrix DB", response.status);
+//     //         return true;
+//     //       } else {
+//     //         console.log("Ticket not created", response.status);
+//     //       }
+//     //     })
+//     //     .catch((error) => {
+//     //       console.error("Error from DB:", error);
+//     //     });
+//     // }
+
+//     res.status(201).json(savedTask);
+//   } catch (error) {
+//     res.status(500).json({ error: "Failed to create the task" });
+//   }
+// };
 
 //completed task..................................................
 const completeTask = async (req, res) => {
@@ -187,7 +225,7 @@ const getTaskDataLast30Days = async (req, res) => {
         { participant: loggedInUserId },
         { observers: loggedInUserId },
       ],
-      dateCreated: { $gte: thirtyDaysAgo },
+      createdAt: { $gte: thirtyDaysAgo },
     });
 
     if (tasks.length === 0) {
@@ -222,7 +260,7 @@ const getTaskDataLast7Days = async (req, res) => {
         { participant: loggedInUserId },
         { observers: loggedInUserId },
       ],
-      dateCreated: { $gte: thirtyDaysAgo },
+      createdAt: { $gte: thirtyDaysAgo },
     });
 
     if (tasks.length === 0) {
